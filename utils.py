@@ -4,9 +4,9 @@ import json
 from PIL import Image
 
 # TODO: end it with the slash
-MASK_PATH = '/Users/suhyunkim/git/Dnntal/img/mask/'
+MASK_PATH = ''
 # TODO: end it with the slash
-ORIGINAL_PATH = '/Users/suhyunkim/git/Dnntal/img/original/'
+ORIGINAL_PATH = ''
 
 def run_command(command, logfile=None, print_output=True, return_output=True):
     # if logfile != None:
@@ -64,7 +64,6 @@ def center_crop(uncropped_im):
     crop_rectangle = (left, top, right, bottom)
 
     cropped_im = im.crop(crop_rectangle)
-    # plt.imshow(cropped_im, cmap='gray', vmin=0, vmax=255)
     width, height = cropped_im.size
     print("after cropping: " + str(width)  + ", " + str(height))
 
@@ -92,7 +91,6 @@ def bottom_crop(uncropped_im):
     crop_rectangle = (left, top, right, bottom)
 
     cropped_im = im.crop(crop_rectangle)
-    # plt.imshow(cropped_im, cmap='gray', vmin=0, vmax=255)
     width, height = cropped_im.size
     print("after cropping: " + str(width)  + ", " + str(height))
 
@@ -119,7 +117,6 @@ def left_right_crop(uncropped_im):
     crop_rectangle = (left, top, right, bottom)
 
     cropped_im = im.crop(crop_rectangle)
-    # plt.imshow(cropped_im, cmap='gray', vmin=0, vmax=255)
     width, height = cropped_im.size
     print("after cropping: " + str(width)  + ", " + str(height))
 
@@ -128,6 +125,7 @@ def left_right_crop(uncropped_im):
         cropped_im = cropped_im.convert('RGB')
 
     cropped_im.save(uncropped_im)
+
 
 def enlarge(uncropped_im, left, right, top, bottom):
     im = Image.open(uncropped_im)
@@ -137,7 +135,6 @@ def enlarge(uncropped_im, left, right, top, bottom):
     crop_rectangle = (left, top, right, bottom)
 
     cropped_im = im.crop(crop_rectangle)
-    # plt.imshow(cropped_im, cmap='gray', vmin=0, vmax=255)
     width, height = cropped_im.size
     print("after cropping: " + str(width)  + ", " + str(height))
 
@@ -146,6 +143,7 @@ def enlarge(uncropped_im, left, right, top, bottom):
         cropped_im = cropped_im.convert('RGB')
 
     cropped_im.save(uncropped_im)
+
 
 def change_filename(filelist, PATH):
     for file in filelist:

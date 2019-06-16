@@ -2,7 +2,7 @@ import utils
 import glob
 import os
 
-PATH_TRAIN = '/Users/suhyunkim/git/Dnntal/preprocessed'
+PATH_TRAIN = ''
 
 
 def saveInDict(filelist):
