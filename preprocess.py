@@ -18,7 +18,6 @@ def saveInDict(filelist):
 def quicksort(filelist):
     mdict, arr = saveInDict(filelist)
     quicksort_recur(arr, 0, len(filelist) - 1)
-    print(f"after quicksort recur: {arr}")
     converted = convert_to_original(arr, mdict)
     return converted
 
@@ -34,11 +33,9 @@ def partition(arr, low, high):
     pivot = arr[high]
 
     i = low - 1
-    print(f"i: {i}, low: {low}, high: {high}")
 
     # looping only up to high - 1 since high is where pivot is located
     for j in range(low, high):
-        print(f"j: {j}")
         if arr[j] <= pivot:
             i += 1
             temp = arr[j]
@@ -48,14 +45,12 @@ def partition(arr, low, high):
     temp = arr[i + 1]
     arr[i + 1] = pivot
     arr[high] = temp
-    print(f"returning pivot index: {i + 1}")
     return i + 1
 
 
 def convert_to_original(number, mdict):
     return_arr = []
     for i, item in enumerate(number):
-        print(f"number: {item}, original: {mdict[item]}")
         return_arr.append(mdict[item])
 
     return return_arr
@@ -68,13 +63,12 @@ def get_key_from_file(text):
 
 
 filelist_originals = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
-# filelist_originals = filelist_originals.sort()
-
 filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
+
+filelist_originals = quicksort(filelist_originals)
 filelist_masks = quicksort(filelist_masks)
 
-# print(filelist_original[0])
-for file in filelist_masks:
-    print(f"after sorting: {file}")
 
-# utils.center_crop(filelist_masks[0])
+for i in range(0, len(filelist_masks)):
+    utils.enlarge(filelist_originals[i], 0, 2000, 0, 1040)
+    utils.enlarge(filelist_masks[i], 0, 2000, 0, 1040)
