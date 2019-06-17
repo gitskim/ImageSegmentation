@@ -4,8 +4,31 @@ import glob
 import os
 import random
 from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
 
 PATH_TRAIN = '/Users/suhyunkim/git/Dnntal/preprocessed'
+
+def get_unet(img_rows, img_cols):
+    inputs = Input((1, img_rows, img_cols))
+    # border_mode of same means there are some padding around input or feature map, making the output feature map's size same as the input's
+    conv1 = Convolution2D(32, 3, 3, activation='relu', border_mode='same')(inputs)
+    conv1 = Convolution2D(32, 3, 3, activation='relu', border_mode='same')(conv1)
+    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+
+    conv2 = Convolution2D(64, 3, 3, activation='relu', border_mode='same')(pool1)
+    conv2 = Convolution2D(64, 3, 3, activation='relu', border_mode='same')(conv2)
+    pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
+
+    conv3 = Convolution2D(128, 3, 3, activation='relu', border_mode='same')(pool2)
+    conv3 = Convolution2D(128, 3, 3, activation='relu', border_mode='same')(conv3)
+    pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
+
+    conv4 = Convolution2D(256, 3, 3, activation='relu', border_mode='same')(pool3)
+    conv4 = Convolution2D(256, 3, 3, activation='relu', border_mode='same')(conv4)
+    pool4 = MaxPooling2D(pool_size=(2, 2))(conv4)
+
+    conv5 = Convolution2D(512, 3, 3, activation='relu', border_mode='same')(pool4)
+    conv5 = Convolution2D(512, 3, 3, activation='relu', border_mode='same')(conv5)
 
 filelist_originals = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
 filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
