@@ -6,8 +6,22 @@ import random
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
+from keras import backend as K
+from keras.optimizers import Adam
 
 PATH_TRAIN = '/Users/suhyunkim/git/Dnntal/preprocessed'
+
+smooth = 1.
+
+def dice_coef(y_true, y_pred):
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    intersection = K.sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (K.sum(y_true_f*y_true_f) + K.sum(y_pred_f*y_pred_f) + smooth)
+
+
+def dice_coef_loss(y_true, y_pred):
+    return 1.-dice_coef(y_true, y_pred)
 
 
 def get_unet(img_rows, img_cols):
@@ -115,7 +129,7 @@ for i in range(len(folds)):
             train_masks.append(filelist_masks[k])
 
     generator = gen.flow(train_originals, train_masks, batch_size=batch_size)
-    model = get_unet()
+    model = get_unet(1040, 2000)
 
     # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
     model.fit_generator(
