@@ -9,7 +9,7 @@ from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D
 from keras import backend as K
 from keras.optimizers import Adam
 
-PATH_TRAIN = '/Users/suhyunkim/git/Dnntal/preprocessed'
+PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
 
 smooth = 1.
 
