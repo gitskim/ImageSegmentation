@@ -91,6 +91,25 @@ filelist_masks = preprocess.quicksort(filelist_masks)
 
 print(np.array(filelist_images).shape)
 
+train_loaded_images = []
+train_loaded_masks = []
+
+for image in filelist_images:
+    train_image = tf.keras.preprocessing.image.load_img(
+        image,
+        grayscale=True,
+        target_size=None
+    )
+    train_loaded_images.append(train_image)
+
+for mask in filelist_masks:
+    train_mask = tf.keras.preprocessing.image.load_img(
+        mask,
+        grayscale=True,
+        target_size=None
+    )
+    train_loaded_masks.append(train_mask)
+
 image_datagen = ImageDataGenerator(horizontal_flip=True,
                                    vertical_flip=True,
                                    width_shift_range=0.1,
@@ -109,13 +128,6 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
 # Provide the same seed and keyword arguments to the fit and flow methods
 seed = 1
 
-train_images = tf.keras.preprocessing.image.load_img(
-    PATH_TRAIN_IMAGES,
-    grayscale=False,
-    color_mode='rgb',
-    target_size=None
-)
-
 train_masks = tf.keras.preprocessing.image.load_img(
     PATH_TRAIN_MASKS,
     grayscale=False,
@@ -123,8 +135,8 @@ train_masks = tf.keras.preprocessing.image.load_img(
     target_size=None
 )
 
-image_datagen.fit(train_images, augment=True, seed=seed)
-mask_datagen.fit(train_masks, augment=True, seed=seed)
+image_datagen.fit(train_loaded_images, augment=True, seed=seed)
+mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
 
 image_generator = image_datagen.flow_from_directory(
     directory=PATH_TRAIN_IMAGES
