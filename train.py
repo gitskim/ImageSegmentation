@@ -5,7 +5,8 @@ import os
 import random
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
+from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout, Conv2D, Dense, Flatten, \
+    MaxPooling2D
 from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
@@ -32,7 +33,7 @@ def dice_coef_loss(y_true, y_pred):
 
 def get_unet_sequential(img_rows, img_cols):
     model = Sequential()
-    model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same', input_shape(img_rows, img_cols, 3)))
+    model.add(Conv2D(32, (3, 3), activation='relu', border_mode='same', input_shape(img_rows, img_cols, 3)))
 
 
 def get_unet(img_rows, img_cols):
