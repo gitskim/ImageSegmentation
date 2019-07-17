@@ -9,6 +9,7 @@ from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D
 from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
+import cv2
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
 PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/original'
@@ -95,12 +96,13 @@ train_loaded_images = []
 train_loaded_masks = []
 
 for image in filelist_images:
-    train_image = tf.keras.preprocessing.image.load_img(
-        image,
-        grayscale=True,
-        target_size=None
-    )
-    train_loaded_images.append(train_image)
+    img = cv2.imread(image)
+    train_loaded_images.append(img)
+
+train_loaded_images = np.array(train_loaded_images)
+
+print("suhyun")
+print(train_loaded_images.shape)
 
 for mask in filelist_masks:
     train_mask = tf.keras.preprocessing.image.load_img(
