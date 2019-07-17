@@ -10,6 +10,7 @@ from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
 import cv2
+from tensorflow.keras.models import Sequential
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
 PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/original'
@@ -27,6 +28,11 @@ def dice_coef(y_true, y_pred):
 
 def dice_coef_loss(y_true, y_pred):
     return 1. - dice_coef(y_true, y_pred)
+
+
+def get_unet_sequential(img_rows, img_cols):
+    model = Sequential()
+    model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same', input_shape(img_rows, img_cols, 3)))
 
 
 def get_unet(img_rows, img_cols):
@@ -143,9 +149,13 @@ mask_generator = mask_datagen.flow_from_directory(
     directory=PATH_TRAIN_MASKS
 )
 
+print("seven")
+
 train_generator = zip(image_generator, mask_generator)
 
-model = get_unet(1040, 2000)
+model = get_unet_sequential(1040, 2000)
+
+print("eight")
 
 # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
 model.fit_generator(
@@ -155,6 +165,7 @@ model.fit_generator(
     shuffle=True
 )
 
+print("nine")
 # create an array from 0 - 195
 indices = list(range(196))
 random.shuffle(indices)
