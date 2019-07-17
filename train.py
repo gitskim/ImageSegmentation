@@ -9,19 +9,22 @@ from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D
 from keras import backend as K
 from keras.optimizers import Adam
 
-PATH_TRAIN = '/Users/suhyunkim/git/Dnntal/preprocessed'
+PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
+PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/original'
+PATH_TRAIN_MASKS = '/home/deepenoughlearning/ImageSegmentation/preprocessed/mask'
 
 smooth = 1.
+
 
 def dice_coef(y_true, y_pred):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
     intersection = K.sum(y_true_f * y_pred_f)
-    return (2. * intersection + smooth) / (K.sum(y_true_f*y_true_f) + K.sum(y_pred_f*y_pred_f) + smooth)
+    return (2. * intersection + smooth) / (K.sum(y_true_f * y_true_f) + K.sum(y_pred_f * y_pred_f) + smooth)
 
 
 def dice_coef_loss(y_true, y_pred):
-    return 1.-dice_coef(y_true, y_pred)
+    return 1. - dice_coef(y_true, y_pred)
 
 
 def get_unet(img_rows, img_cols):
@@ -79,21 +82,49 @@ def get_unet(img_rows, img_cols):
     return model
 
 
-filelist_originals = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
+filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
 filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
 
-filelist_originals = preprocess.quicksort(filelist_originals)
+filelist_images = preprocess.quicksort(filelist_images)
 filelist_masks = preprocess.quicksort(filelist_masks)
 
-print(np.array(filelist_originals).shape)
+print(np.array(filelist_images).shape)
 
-gen = ImageDataGenerator(horizontal_flip=True,
-                         vertical_flip=True,
-                         width_shift_range=0.1,
-                         height_shift_range=0.1,
-                         zoom_range=0.1,
-                         rotation_range=10
-                         )
+image_datagen = ImageDataGenerator(horizontal_flip=True,
+                                   vertical_flip=True,
+                                   width_shift_range=0.1,
+                                   height_shift_range=0.1,
+                                   zoom_range=0.1,
+                                   rotation_range=10
+                                   )
+
+mask_datagen = ImageDataGenerator(horizontal_flip=True,
+                                  vertical_flip=True,
+                                  width_shift_range=0.1,
+                                  height_shift_range=0.1,
+                                  zoom_range=0.1,
+                                  rotation_range=10
+                                  )
+
+image_generator = image_datagen.flow_from_directory(
+    directory=PATH_TRAIN_IMAGES
+)
+
+mask_generator = mask_datagen.flow_from_directory(
+    directory=PATH_TRAIN_MASKS
+)
+
+train_generator = zip(image_generator, mask_generator)
+
+model = get_unet(1040, 2000)
+
+# steps_per_epoch = number of batch iterations before a training epoch is considered finished.
+model.fit_generator(
+    train_generator,
+    steps_per_epoch=1000,
+    epochs=15,
+    shuffle=True
+)
 
 # create an array from 0 - 195
 indices = list(range(196))
@@ -101,6 +132,7 @@ random.shuffle(indices)
 
 print(indices)
 
+''' 
 # TODO: make k-fold more generic
 # 196 - 49 = 147
 for i in range(0, 196, 49):
@@ -110,14 +142,14 @@ folds = [[0, 48], [49, 97], [98, 146], [147, 195]]
 
 batch_size = 49
 for i in range(len(folds)):
-    train_originals = []
+    train_images = []
     train_masks = []
-    val_originals = []
+    val_images = []
     val_masks = []
 
     for j in range(folds[i][0], folds[i][1] + 1):
         # TODO: append an actual image
-        val_originals.append(filelist_originals[j])
+        val_images.append(filelist_images[j])
         val_masks.append(filelist_masks[j])
 
     for j in range(len(folds)):
@@ -125,17 +157,18 @@ for i in range(len(folds)):
             continue
 
         for k in range(folds[j][0], folds[j][1] + 1):
-            train_originals.append(filelist_originals[k])
+            train_images.append(filelist_images[k])
             train_masks.append(filelist_masks[k])
 
-    generator = gen.flow(train_originals, train_masks, batch_size=batch_size)
+    generator = gen.flow(train_images, train_masks, batch_size=batch_size)
     model = get_unet(1040, 2000)
 
     # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
     model.fit_generator(
         generator,
-        steps_per_epoch=len(filelist_originals) / batch_size,
+        steps_per_epoch=len(filelist_images) / batch_size,
         epochs=15,
         shuffle=True,
-        validation_data=(train_originals, train_masks)
+        validation_data=(train_images, train_masks)
     )
+'''
