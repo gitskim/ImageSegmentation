@@ -105,13 +105,10 @@ print("suhyun")
 print(train_loaded_images.shape)
 
 for mask in filelist_masks:
-    train_mask = tf.keras.preprocessing.image.load_img(
-        mask,
-        grayscale=True,
-        target_size=None
-    )
-    train_loaded_masks.append(train_mask)
+    msk = cv2.imread(mask)
+    train_loaded_masks.append(msk)
 
+print("one")
 image_datagen = ImageDataGenerator(horizontal_flip=True,
                                    vertical_flip=True,
                                    width_shift_range=0.1,
@@ -119,7 +116,7 @@ image_datagen = ImageDataGenerator(horizontal_flip=True,
                                    zoom_range=0.1,
                                    rotation_range=10
                                    )
-
+print("two")
 mask_datagen = ImageDataGenerator(horizontal_flip=True,
                                   vertical_flip=True,
                                   width_shift_range=0.1,
@@ -130,12 +127,17 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
 # Provide the same seed and keyword arguments to the fit and flow methods
 seed = 1
 
+print("three")
 image_datagen.fit(train_loaded_images, augment=True, seed=seed)
+print("four")
 mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
+
+print("five")
 
 image_generator = image_datagen.flow_from_directory(
     directory=PATH_TRAIN_IMAGES
 )
+print("six")
 
 mask_generator = mask_datagen.flow_from_directory(
     directory=PATH_TRAIN_MASKS
