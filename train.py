@@ -105,6 +105,10 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
                                   zoom_range=0.1,
                                   rotation_range=10
                                   )
+# Provide the same seed and keyword arguments to the fit and flow methods
+seed = 1
+image_datagen.fit(filelist_images, augment=True, seed=seed)
+mask_datagen.fit(filelist_masks, augment=True, seed=seed)
 
 image_generator = image_datagen.flow_from_directory(
     directory=PATH_TRAIN_IMAGES
