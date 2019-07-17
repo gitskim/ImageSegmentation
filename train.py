@@ -8,6 +8,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
 from keras import backend as K
 from keras.optimizers import Adam
+import tensorflow as tf
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
 PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/original'
@@ -107,8 +108,23 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
                                   )
 # Provide the same seed and keyword arguments to the fit and flow methods
 seed = 1
-image_datagen.fit(filelist_images, augment=True, seed=seed)
-mask_datagen.fit(filelist_masks, augment=True, seed=seed)
+
+train_images = tf.keras.preprocessing.image.load_img(
+    PATH_TRAIN_IMAGES,
+    grayscale=False,
+    color_mode='rgb',
+    target_size=None
+)
+
+train_masks = tf.keras.preprocessing.image.load_img(
+    PATH_TRAIN_MASKS,
+    grayscale=False,
+    color_mode='rgb',
+    target_size=None
+)
+
+image_datagen.fit(train_images, augment=True, seed=seed)
+mask_datagen.fit(train_masks, augment=True, seed=seed)
 
 image_generator = image_datagen.flow_from_directory(
     directory=PATH_TRAIN_IMAGES
