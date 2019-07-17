@@ -128,13 +128,6 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
 # Provide the same seed and keyword arguments to the fit and flow methods
 seed = 1
 
-train_masks = tf.keras.preprocessing.image.load_img(
-    PATH_TRAIN_MASKS,
-    grayscale=False,
-    color_mode='rgb',
-    target_size=None
-)
-
 image_datagen.fit(train_loaded_images, augment=True, seed=seed)
 mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
 
