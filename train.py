@@ -33,7 +33,7 @@ def dice_coef_loss(y_true, y_pred):
 
 def get_unet_sequential(img_rows, img_cols):
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', border_mode='same', input_shape(img_rows, img_cols, 3)))
+    model.add(Conv2D(32, (3, 3), activation='relu', border_mode='same', input_shape=(img_rows, img_cols, 3)))
 
 
 def get_unet(img_rows, img_cols):
