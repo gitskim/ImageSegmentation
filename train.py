@@ -5,12 +5,12 @@ import os
 import random
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout, Conv2D, Dense, Flatten, \
-    MaxPooling2D
+from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
 from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
 import cv2
+from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from tensorflow.keras.models import Sequential
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
@@ -33,7 +33,7 @@ def dice_coef_loss(y_true, y_pred):
 
 def get_unet_sequential(img_rows, img_cols):
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', border_mode='same', input_shape=(img_rows, img_cols, 3)))
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(img_rows, img_cols, 3)))
 
 
 def get_unet(img_rows, img_cols):
@@ -90,7 +90,9 @@ def get_unet(img_rows, img_cols):
 
     return model
 
+model = get_unet_sequential(1040, 2000)
 
+'''
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
 filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
 
@@ -173,7 +175,6 @@ random.shuffle(indices)
 
 print(indices)
 
-''' 
 # TODO: make k-fold more generic
 # 196 - 49 = 147
 for i in range(0, 196, 49):
