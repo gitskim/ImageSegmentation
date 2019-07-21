@@ -30,12 +30,6 @@ def dice_coef(y_true, y_pred):
 def dice_coef_loss(y_true, y_pred):
     return 1. - dice_coef(y_true, y_pred)
 
-
-def get_unet_sequential(img_rows, img_cols):
-    model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(img_rows, img_cols, 3)))
-
-
 def get_unet(img_rows, img_cols):
     inputs = Input((1, img_rows, img_cols))
     # border_mode of same means there are some padding around input or feature map, making the output feature map's size same as the input's
@@ -89,6 +83,7 @@ def get_unet(img_rows, img_cols):
     model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
 
     return model
+
 
 model = get_unet_sequential(1040, 2000)
 
