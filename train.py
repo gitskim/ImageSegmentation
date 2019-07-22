@@ -228,14 +228,16 @@ mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
 
 print("five")
 
-image_generator = image_datagen.flow_from_directory(
-    directory=PATH_TRAIN_IMAGES
-)
+image_generator = image_datagen.flow(train_loaded_images, seed=1)
 print("six")
-
-mask_generator = mask_datagen.flow_from_directory(
-    directory=PATH_TRAIN_MASKS
-)
+mask_generator = mask_datagen.flow(train_loaded_masks, seed=1)
+# image_generator = image_datagen.flow_from_directory(
+#     directory=PATH_TRAIN_IMAGES
+# )
+#
+# mask_generator = mask_datagen.flow_from_directory(
+#     directory=PATH_TRAIN_MASKS
+# )
 
 print("seven")
 
