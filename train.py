@@ -9,7 +9,7 @@ from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
 import cv2
-from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from tensorflow.keras.layers import Input, merge, Conv2D, Dense, Flatten, MaxPooling2D, UpSampling2D, Dropout
 from tensorflow.keras.models import Sequential
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
