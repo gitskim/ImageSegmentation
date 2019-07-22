@@ -31,7 +31,7 @@ def dice_coef_loss(y_true, y_pred):
 
 
 def get_unet(img_rows, img_cols):
-    inputs = Input((img_rows, img_cols, 1))
+    inputs = Input((img_rows, img_cols, 3))
 
     conv1 = Conv2D(64,
                    3,
