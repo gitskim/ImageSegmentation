@@ -178,9 +178,6 @@ def get_unet(img_rows, img_cols):
     return model
 
 
-model = get_unet(1040, 2000)
-
-'''
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
 filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
 
@@ -244,7 +241,7 @@ print("seven")
 
 train_generator = zip(image_generator, mask_generator)
 
-model = get_unet_sequential(1040, 2000)
+model = get_unet(1040, 2000)
 
 print("eight")
 
@@ -262,7 +259,7 @@ indices = list(range(196))
 random.shuffle(indices)
 
 print(indices)
-
+'''
 # TODO: make k-fold more generic
 # 196 - 49 = 147
 for i in range(0, 196, 49):
