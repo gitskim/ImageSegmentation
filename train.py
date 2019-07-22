@@ -190,7 +190,7 @@ train_loaded_images = []
 train_loaded_masks = []
 
 for image in filelist_images:
-    img = cv2.imread(image, 0) #reading grayscale images. without it, it will have 3 color channels
+    img = cv2.imread(image, 0)  # reading grayscale images. without it, it will have 3 color channels
     newimg = np.zeros((1040, 2000, 1), dtype=int)
     newimg[:, :, 0] = img[:, :]
     train_loaded_images.append(newimg)
@@ -205,6 +205,8 @@ for mask in filelist_masks:
     msk = cv2.imread(mask, 0)
     newimg[:, :, 0] = msk[:, :]
     train_loaded_masks.append(newimg)
+
+train_loaded_masks = np.array(train_loaded_masks)
 
 train_loaded_masks = np.array(train_loaded_masks)
 
@@ -258,10 +260,10 @@ model = get_unet(1040, 2000)
 print("eight")
 
 # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
-batch_size=32
+batch_size = 32
 model.fit_generator(
     train_generator,
-    validation_steps=batch_size/2, steps_per_epoch=len(train_loaded_images)/(batch_size*2), epochs=5
+    validation_steps=batch_size / 2, steps_per_epoch=len(train_loaded_images) / (batch_size * 2), epochs=5
 )
 
 print("nine")
