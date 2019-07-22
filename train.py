@@ -235,7 +235,7 @@ def get_unet(img_rows, img_cols):
 #     return model
 
 
-model = get_unet(1040, 1040)
+model = get_unet(1040, 2000)
 
 '''
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
