@@ -202,6 +202,8 @@ for mask in filelist_masks:
     msk = cv2.imread(mask)
     train_loaded_masks.append(msk)
 
+train_loaded_masks = np.array(train_loaded_masks)
+
 print("one")
 image_datagen = ImageDataGenerator(horizontal_flip=True,
                                    vertical_flip=True,
@@ -230,6 +232,7 @@ print("five")
 
 image_generator = image_datagen.flow(train_loaded_images, seed=1)
 print("six")
+print(train_loaded_masks.shape)
 mask_generator = mask_datagen.flow(train_loaded_masks, seed=1)
 # image_generator = image_datagen.flow_from_directory(
 #     directory=PATH_TRAIN_IMAGES
