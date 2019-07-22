@@ -31,7 +31,7 @@ def dice_coef_loss(y_true, y_pred):
 
 
 def get_unet(img_rows, img_cols):
-    inputs = Input((img_rows, img_cols, 3))
+    inputs = Input((img_rows, img_cols, 1))
 
     conv1 = Conv2D(64,
                    3,
@@ -190,8 +190,10 @@ train_loaded_images = []
 train_loaded_masks = []
 
 for image in filelist_images:
-    img = cv2.imread(image)
-    train_loaded_images.append(img)
+    img = cv2.imread(image, 0)  # reading grayscale images. without it, it will have 3 color channels
+    newimg = np.zeros((1040, 2000, 1), dtype=int)
+    newimg[:, :, 0] = img[:, :]
+    train_loaded_images.append(newimg)
 
 train_loaded_images = np.array(train_loaded_images)
 
@@ -199,8 +201,12 @@ print("suhyun")
 print(train_loaded_images.shape)
 
 for mask in filelist_masks:
-    msk = cv2.imread(mask)
-    train_loaded_masks.append(msk)
+    newimg = np.zeros((1040, 2000, 1), dtype=int)
+    msk = cv2.imread(mask, 0)
+    newimg[:, :, 0] = msk[:, :]
+    train_loaded_masks.append(newimg)
+
+train_loaded_masks = np.array(train_loaded_masks)
 
 train_loaded_masks = np.array(train_loaded_masks)
 
@@ -230,17 +236,20 @@ mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
 
 print("five")
 
-image_generator = image_datagen.flow(train_loaded_images, seed=1)
+image_generator = image_datagen.flow_from_directory(
+    directory=PATH_TRAIN_IMAGES,
+    class_mode=None,
+    target_size=(1040, 2000),
+    color_mode='grayscale'
+)
 print("six")
-print(train_loaded_masks.shape)
-mask_generator = mask_datagen.flow(train_loaded_masks, seed=1)
-# image_generator = image_datagen.flow_from_directory(
-#     directory=PATH_TRAIN_IMAGES
-# )
-#
-# mask_generator = mask_datagen.flow_from_directory(
-#     directory=PATH_TRAIN_MASKS
-# )
+
+mask_generator = mask_datagen.flow_from_directory(
+    directory=PATH_TRAIN_MASKS,
+    class_mode=None,
+    target_size=(1040, 2000),
+    color_mode='grayscale'
+)
 
 print("seven")
 
@@ -251,20 +260,18 @@ model = get_unet(1040, 2000)
 print("eight")
 
 # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
+batch_size = 32
 model.fit_generator(
     train_generator,
-    steps_per_epoch=1000,
-    epochs=15,
-    shuffle=True
+    validation_steps=batch_size / 2, steps_per_epoch=len(train_loaded_images) / (batch_size * 2), epochs=5
 )
 
 print("nine")
+'''
 # create an array from 0 - 195
 indices = list(range(196))
 random.shuffle(indices)
 
-print(indices)
-'''
 # TODO: make k-fold more generic
 # 196 - 49 = 147
 for i in range(0, 196, 49):
