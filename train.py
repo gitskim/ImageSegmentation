@@ -5,7 +5,6 @@ import os
 import random
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Input, merge, Convolution2D, MaxPooling2D, UpSampling2D, Dropout
 from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
