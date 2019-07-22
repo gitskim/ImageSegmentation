@@ -30,6 +30,7 @@ def dice_coef(y_true, y_pred):
 def dice_coef_loss(y_true, y_pred):
     return 1. - dice_coef(y_true, y_pred)
 
+
 def get_unet(img_rows, img_cols):
     inputs = Input((1, img_rows, img_cols))
     # border_mode of same means there are some padding around input or feature map, making the output feature map's size same as the input's
@@ -85,7 +86,7 @@ def get_unet(img_rows, img_cols):
     return model
 
 
-model = get_unet_sequential(1040, 2000)
+model = get_unet(1040, 2000)
 
 '''
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
