@@ -32,7 +32,7 @@ def dice_coef_loss(y_true, y_pred):
 
 
 def get_unet(img_rows, img_cols):
-    inputs = Input((1, img_rows, img_cols))
+    inputs = Input((img_rows, img_cols, 1))
     # border_mode of same means there are some padding around input or feature map, making the output feature map's size same as the input's
     conv1 = Convolution2D(32, 3, 3, activation='relu', border_mode='same')(inputs)
     conv1 = Convolution2D(32, 3, 3, activation='relu', border_mode='same')(conv1)
@@ -86,7 +86,7 @@ def get_unet(img_rows, img_cols):
     return model
 
 
-model = get_unet(1040, 2000)
+model = get_unet(1040, 1040)
 
 '''
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
