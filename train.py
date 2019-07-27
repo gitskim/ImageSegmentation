@@ -107,7 +107,7 @@ def get_unet(img_rows, img_cols):
     conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
 
     model = Model(input=inputs, output=conv10)
-    model.compile(optimizer=Adam(lr=1e-5), loss=bce_dice_loss, metrics=[mean_iou])
+    model.compile(optimizer=Adam(lr=1e-5), loss=bce_dice_loss, metrics=[dice_coef_loss()])
 
     return model
 
