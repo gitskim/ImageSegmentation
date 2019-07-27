@@ -171,6 +171,7 @@ mask_datagen.fit(train_loaded_masks, augment=True, seed=seed)
 print("five")
 
 image_generator = image_datagen.flow_from_directory(
+    batch_size=1,
     directory=PATH_TRAIN_IMAGES,
     class_mode=None,
     target_size=(1040, 2000),
@@ -179,6 +180,7 @@ image_generator = image_datagen.flow_from_directory(
 print("six")
 
 mask_generator = mask_datagen.flow_from_directory(
+    batch_size=1,
     directory=PATH_TRAIN_MASKS,
     class_mode=None,
     target_size=(1040, 2000),
@@ -194,10 +196,10 @@ model = get_unet(1040, 2000)
 print("eight")
 
 # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
-batch_size = 4
+batch_size = 1
 model.fit_generator(
     train_generator,
-    validation_steps=batch_size / 2, steps_per_epoch=len(train_loaded_images) / (batch_size * 2), epochs=5
+    validation_steps=2, steps_per_epoch=len(train_loaded_images) / (batch_size * 2), epochs=5
 )
 
 print("nine")
