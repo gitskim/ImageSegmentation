@@ -14,12 +14,23 @@ from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
 from tensorflow.keras.models import Sequential
+%matplotlib inline
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 PATH_TRAIN = '/home/deepenoughlearning/ImageSegmentation/preprocessed'
 PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/original'
 PATH_TRAIN_MASKS = '/home/deepenoughlearning/ImageSegmentation/preprocessed/mask'
 
 smooth = 1.
+
+
+def plot_sample(X, y):
+    xplot = plt.imshow(X)
+    xplot.set_title('Prediction')
+
+    yplot = plt.imshow(y)
+    yplot.set_title('Ground Truth')
 
 
 def dice_coef(y_true, y_pred):
@@ -213,5 +224,3 @@ mask[0] = mask_img
 print("nine")
 
 plot_sample(preds_train, mask)
-
-
