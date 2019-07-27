@@ -10,7 +10,7 @@ from keras import backend as K
 from keras.optimizers import Adam
 import tensorflow as tf
 import cv2
-#from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, Concatenate
+# from keras.layers import Input, merge, Conv2D, MaxPooling2D, UpSampling2D, Dropout, Cropping2D, Concatenate
 from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
@@ -110,6 +110,28 @@ def get_unet(img_rows, img_cols):
     model.compile(optimizer=Adam(lr=1e-5), loss=bce_dice_loss, metrics=[mean_iou])
 
     return model
+
+
+def data_gen(img_folder, mask_folder, batchsize):
+    num_training_images = os.listdir(img_folder)
+    random.shuffle(num_training_images)  # then what happens to the mask folder?
+    # it's necessary for yield
+    start = 0
+    while (True):
+        img = np.zeros((batchsize, 1040, 2000, 1)).astype('float')
+        mask = np.zeros((batchsize, 1040, 2000, 1)).astype('float')
+        for i in range(start, batchsize):
+            train_img = cv2.imread(img_folder + '/' + num_training_images[i], cv2.IMREAD_GRAYSCALE) / 255.
+            img[i - start] = train_img
+            train_mask = cv2.imread(mask_folder + '/' + num_training_images[i], cv2.IMREAD_GRAYSCALE) / 255.
+            mask[i - start] = train_mask
+
+        start += batchsize
+        if (start + batchsize >= len(num_training_images)):
+            start = 0
+            random.shuffle(num_training_images)
+
+        yield img, mask
 
 
 filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/cavity/', '*.jpg'))
