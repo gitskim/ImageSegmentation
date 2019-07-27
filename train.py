@@ -112,8 +112,8 @@ def get_unet(img_rows, img_cols):
     return model
 
 
-filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/', '*.jpg'))
-filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/', '*.jpg'))
+filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/cavity/', '*.jpg'))
+filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/cavity/', '*.jpg'))
 
 filelist_images = preprocess.quicksort(filelist_images)
 filelist_masks = preprocess.quicksort(filelist_masks)
@@ -194,7 +194,7 @@ model = get_unet(1040, 2000)
 print("eight")
 
 # steps_per_epoch = number of batch iterations before a training epoch is considered finished.
-batch_size = 32
+batch_size = 4
 model.fit_generator(
     train_generator,
     validation_steps=batch_size / 2, steps_per_epoch=len(train_loaded_images) / (batch_size * 2), epochs=5
