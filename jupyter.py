@@ -1,3 +1,4 @@
+import preprocess
 import numpy as np
 import glob
 import os
@@ -14,7 +15,8 @@ from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
 from tensorflow.keras.models import Sequential
-%matplotlib inline
+% matplotlib
+inline
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
@@ -23,14 +25,6 @@ PATH_TRAIN_IMAGES = '/home/deepenoughlearning/ImageSegmentation/preprocessed/ori
 PATH_TRAIN_MASKS = '/home/deepenoughlearning/ImageSegmentation/preprocessed/mask'
 
 smooth = 1.
-
-
-def plot_sample(X, y):
-    xplot = plt.imshow(X)
-    xplot.set_title('Prediction')
-
-    yplot = plt.imshow(y)
-    yplot.set_title('Ground Truth')
 
 
 def dice_coef(y_true, y_pred):
@@ -163,6 +157,32 @@ mask_datagen = ImageDataGenerator(horizontal_flip=True,
 # Provide the same seed and keyword arguments to the fit and flow methods
 seed = 1
 
+filelist_images = glob.glob(os.path.join(PATH_TRAIN + '/original/cavity/', '*.jpg'))
+filelist_masks = glob.glob(os.path.join(PATH_TRAIN + '/mask/cavity/', '*.jpg'))
+
+filelist_images = preprocess.quicksort(filelist_images)
+filelist_masks = preprocess.quicksort(filelist_masks)
+
+train_loaded_images = []
+train_loaded_masks = []
+
+for image in filelist_images:
+    img = cv2.imread(image, 0)  # reading grayscale images. without it, it will have 3 color channels
+    newimg = np.zeros((1040, 2000, 1), dtype=int)
+    newimg[:, :, 0] = img[:, :]
+    train_loaded_images.append(newimg)
+
+train_loaded_images = np.array(train_loaded_images)
+
+print("suhyun")
+print(train_loaded_images.shape)
+
+for mask in filelist_masks:
+    newimg = np.zeros((1040, 2000, 1), dtype=int)
+    msk = cv2.imread(mask, 0)
+    newimg[:, :, 0] = msk[:, :]
+    train_loaded_masks.append(newimg)
+
 print("three")
 image_datagen.fit(train_loaded_images, augment=True, seed=seed)
 print("four")
@@ -211,16 +231,31 @@ model.fit_generator(
 
 model.save_weights("unet-7-27.h5")
 model.load_weights('unet-7-27.h5')
-img = np.zeros((1, 1040, 2000, 1)).astype('float')
-train_img = cv2.imread(PATH_TRAIN_IMAGES + '/' + "186.jpg", cv2.IMREAD_GRAYSCALE) / 255.
-img[0] = train_img
+img = np.zeros((1, 1040, 2000, 1), dtype=int)
+
+
+train_img = cv2.imread(PATH_TRAIN_IMAGES + '/cavity/' + "186.jpg", 0)
+
+
+print(img.shape)
+print(train_img.shape)
+
+
+def plot_sample(X):
+    newx = np.zeros((1040, 2000), dtype=int)
+    newx[:, :] = X[0, :, :, 0]
+    print(newx.shape)
+    xplot = plt.imshow(newx)
+
+
+img[0, :, :, 0] = train_img
 
 preds_train = model.predict(img, verbose=1)
 
-mask = np.zeros((1, 1040, 2000, 1)).astype('float')
-mask_img = cv2.imread(PATH_TRAIN_MASKS + '/' + "186.jpg", cv2.IMREAD_GRAYSCALE) / 255.
-mask[0] = mask_img
+mask = np.zeros((1, 1040, 2000, 1), dtype=int)
+mask_img = cv2.imread(PATH_TRAIN_MASKS + '/cavity/' + "109.jpg", 0)
+mask[0, :, :, 0] = mask_img
 
 print("nine")
 
-plot_sample(preds_train, mask)
+plot_sample(preds_train)
