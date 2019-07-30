@@ -85,25 +85,25 @@ def get_unet(img_rows, img_cols):
     drop5 = Dropout(0.5)(conv5)
 
     up6 = Conv2D(512, 2, activation='relu', padding='same', kernel_initializer='he_normal', name='upsampleconv2d1')(
-        UpSampling2D(size=(2, 2))(drop5), name='upsampling2d1')
+        UpSampling2D(size=(2, 2), name='upsampling2d1')(drop5))
     merge6 = concatenate([drop4, up6], axis=3)
     conv6 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d1')(merge6)
     conv6 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d2')(conv6)
 
     up7 = Conv2D(256, 2, activation='relu', padding='same', kernel_initializer='he_normal', name='upsampleconv2d2')(
-        UpSampling2D(size=(2, 2))(conv6), name='upsampling2d2')
+        UpSampling2D(size=(2, 2), name='upsampling2d2')(conv6))
     merge7 = concatenate([conv3, up7], axis=3)
     conv7 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d3')(merge7)
     conv7 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d4')(conv7)
 
     up8 = Conv2D(128, 2, activation='relu', padding='same', kernel_initializer='he_normal', name='upsampleconv2d3')(
-        UpSampling2D(size=(2, 2))(conv7), name='upsampling2d3')
+        UpSampling2D(size=(2, 2), name='upsampling2d3')(conv7))
     merge8 = concatenate([conv2, up8], axis=3)
     conv8 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d5')(merge8)
     conv8 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d6')(conv8)
 
     up9 = Conv2D(64, 2, activation='relu', padding='same', kernel_initializer='he_normal', name='upsampleconv2d4')(
-        UpSampling2D(size=(2, 2))(conv8), name='upsampling2d4')
+        UpSampling2D(size=(2, 2), name='upsampling2d4')(conv8))
     merge9 = concatenate([conv1, up9], axis=3)
     conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d7')(merge9)
     conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal', name='mergeconv2d8')(conv9)
